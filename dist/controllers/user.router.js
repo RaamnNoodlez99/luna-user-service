@@ -1560,30 +1560,63 @@ router.get('/:id', (0, _expressAsyncHandler["default"])( /*#__PURE__*/function (
     return _ref32.apply(this, arguments);
   };
 }()));
-
-//UPDATE USER BACKGROUND PICTURE -
-router.put('/update_background_picture', upload.single('file'), (0, _expressAsyncHandler["default"])( /*#__PURE__*/function () {
+router.get("/userByEmail/:email", (0, _expressAsyncHandler["default"])( /*#__PURE__*/function () {
   var _ref33 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee33(req, res) {
-    var result, email, user;
+    var userEmail, user;
     return _regeneratorRuntime().wrap(function _callee33$(_context33) {
       while (1) switch (_context33.prev = _context33.next) {
         case 0:
-          _context33.prev = 0;
+          userEmail = decodeURIComponent(req.params.email);
+          _context33.next = 3;
+          return _user.UserModel.findOne({
+            emailAddress: userEmail
+          });
+        case 3:
+          user = _context33.sent;
+          if (user) {
+            _context33.next = 7;
+            break;
+          }
+          res.status(404).send({
+            message: 'User not found'
+          });
+          return _context33.abrupt("return");
+        case 7:
+          res.send(user);
+        case 8:
+        case "end":
+          return _context33.stop();
+      }
+    }, _callee33);
+  }));
+  return function (_x70, _x71) {
+    return _ref33.apply(this, arguments);
+  };
+}()));
+
+//UPDATE USER BACKGROUND PICTURE -
+router.put('/update_background_picture', upload.single('file'), (0, _expressAsyncHandler["default"])( /*#__PURE__*/function () {
+  var _ref34 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee34(req, res) {
+    var result, email, user;
+    return _regeneratorRuntime().wrap(function _callee34$(_context34) {
+      while (1) switch (_context34.prev = _context34.next) {
+        case 0:
+          _context34.prev = 0;
           if (req.file) {
-            _context33.next = 4;
+            _context34.next = 4;
             break;
           }
           res.status(400).json({
             message: 'No file uploaded'
           });
-          return _context33.abrupt("return");
+          return _context34.abrupt("return");
         case 4:
-          _context33.next = 6;
+          _context34.next = 6;
           return _cloudinary.cloudinary.uploader.upload(req.file.path);
         case 6:
-          result = _context33.sent;
+          result = _context34.sent;
           email = req.body.email;
-          _context33.next = 10;
+          _context34.next = 10;
           return _user.UserModel.findOneAndUpdate({
             emailAddress: email
           }, {
@@ -1594,7 +1627,7 @@ router.put('/update_background_picture', upload.single('file'), (0, _expressAsyn
             "new": true
           });
         case 10:
-          user = _context33.sent;
+          user = _context34.sent;
           if (user) {
             res.status(200).json({
               message: 'User background photo updated successfuly',
@@ -1605,37 +1638,37 @@ router.put('/update_background_picture', upload.single('file'), (0, _expressAsyn
               message: 'User not found'
             });
           }
-          _context33.next = 17;
+          _context34.next = 17;
           break;
         case 14:
-          _context33.prev = 14;
-          _context33.t0 = _context33["catch"](0);
+          _context34.prev = 14;
+          _context34.t0 = _context34["catch"](0);
           // console.log(error);
           res.status(500).send({
             error: 'Internal server error'
           });
         case 17:
         case "end":
-          return _context33.stop();
+          return _context34.stop();
       }
-    }, _callee33, null, [[0, 14]]);
+    }, _callee34, null, [[0, 14]]);
   }));
-  return function (_x70, _x71) {
-    return _ref33.apply(this, arguments);
+  return function (_x72, _x73) {
+    return _ref34.apply(this, arguments);
   };
 }()));
 
 //UPDATE USER BIO - WORKING
 router.put('/update_user_bio', (0, _expressAsyncHandler["default"])( /*#__PURE__*/function () {
-  var _ref34 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee34(req, res, next) {
+  var _ref35 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee35(req, res, next) {
     var _req$body14, bio, email, user;
-    return _regeneratorRuntime().wrap(function _callee34$(_context34) {
-      while (1) switch (_context34.prev = _context34.next) {
+    return _regeneratorRuntime().wrap(function _callee35$(_context35) {
+      while (1) switch (_context35.prev = _context35.next) {
         case 0:
-          _context34.prev = 0;
+          _context35.prev = 0;
           _req$body14 = req.body, bio = _req$body14.bio, email = _req$body14.email; // console.log("email: " + email);
           console.log("bio:" + bio);
-          _context34.next = 5;
+          _context35.next = 5;
           return _user.UserModel.findOneAndUpdate({
             emailAddress: email
           }, {
@@ -1646,7 +1679,7 @@ router.put('/update_user_bio', (0, _expressAsyncHandler["default"])( /*#__PURE__
             "new": true
           });
         case 5:
-          user = _context34.sent;
+          user = _context35.sent;
           if (user) {
             res.status(200).json({
               message: 'User bio updated successfuly'
@@ -1656,23 +1689,23 @@ router.put('/update_user_bio', (0, _expressAsyncHandler["default"])( /*#__PURE__
               message: 'User not found'
             });
           }
-          _context34.next = 12;
+          _context35.next = 12;
           break;
         case 9:
-          _context34.prev = 9;
-          _context34.t0 = _context34["catch"](0);
+          _context35.prev = 9;
+          _context35.t0 = _context35["catch"](0);
           // console.log(error);
           res.status(500).send({
             error: 'Internal server error'
           });
         case 12:
         case "end":
-          return _context34.stop();
+          return _context35.stop();
       }
-    }, _callee34, null, [[0, 9]]);
+    }, _callee35, null, [[0, 9]]);
   }));
-  return function (_x72, _x73, _x74) {
-    return _ref34.apply(this, arguments);
+  return function (_x74, _x75, _x76) {
+    return _ref35.apply(this, arguments);
   };
 }()));
 var _default = router;
